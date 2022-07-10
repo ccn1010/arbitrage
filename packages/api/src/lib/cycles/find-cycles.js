@@ -6,16 +6,16 @@ module.exports = (graph, start) => {
   const nodes = cloneDeep(graph)
 
   // initializaion of parent and dist dicts
-  const p = {}
-  const d = {}
+  const pre = {}
+  const dist = {}
 
   Object.keys(nodes).forEach((node) => {
-    d[node] = -Infinity
-    p[node] = []
+    dist[node] = -Infinity
+    pre[node] = []
   })
 
-  d[start] = 1
-  p[start] = [{
+  dist[start] = 1
+  pre[start] = [{
     parent: start,
   }]
 
@@ -25,6 +25,7 @@ module.exports = (graph, start) => {
   // clear nodes[]
   nodes[start] = []
 
+  // console.log('edges', edges)
   // starting algorithms
   while (edges.length) {
     const edge = edges.pop()
@@ -32,20 +33,20 @@ module.exports = (graph, start) => {
       to, from, weight, bank,
     } = edge
 
-    if (d[to] < (d[from] * weight)) {
-      d[to] = (d[from] * weight)
-      p[to].push({
+    if (dist[to] < (dist[from] * weight)) {
+      dist[to] = (dist[from] * weight)
+      pre[to].push({
         parent: from,
-        bank,
         to,
       })
     }
     edges.unshift(...(nodes[to] || []))
     nodes[to] = []
   }
+  // console.log('prepreprepreprepre', pre)
 
   // starting to try and reconstact path
-  let parent = p[start].pop()
+  let parent = pre[start].pop()
 
   // return nothing if no path
   if (parent.parent === start) {
@@ -58,7 +59,7 @@ module.exports = (graph, start) => {
   // reconstacting path
   const path = [parent]
   while (parent.parent !== start) {
-    parent = p[parent.parent].pop()
+    parent = pre[parent.parent].pop()
     path.unshift(parent)
   }
 

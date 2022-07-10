@@ -1,5 +1,6 @@
 const express = require('express')
 const path = require('path')
+const cors = require('cors')
 const listEndpoints = require('express-list-endpoints')
 
 const { createExpressLogger, logger } = require('./src/lib/logger')
@@ -43,6 +44,7 @@ const bootstrap = async (app) => {
 const app = express()
 
 bootstrap(app)
+app.use(cors())
 
 process.on('uncaughtException', async (error) => {
   logger.error('uncaughtException', {

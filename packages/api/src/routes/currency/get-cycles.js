@@ -1,9 +1,20 @@
 const Joi = require('@hapi/joi')
 
 const findCycles = require('../../lib/cycles/find-cycles')
-const findOptimalRoutes = require('../../lib/cycles/find-optimal-routes')
 const subCycles = require('../../lib/cycles/sub-cycles')
 const generateGraph = require('../../lib/graph/generate-graph')
+
+const findOptimalRoutes = (cycles, currency, filterByCurrency) => {
+  const dp = {}
+  return cycles
+    .filter(({ path, profit }) => {
+      if (filterByCurrency && path[0].parent !== currency) return false
+      if (dp[`${profit}: ${path.length}`]) return false
+      dp[`${profit}: ${path.length}`] = 1
+      return true
+    })
+    .sort((a, b) => (b.profit / b.path.length) - (a.profit / a.path.length))
+}
 
 const schema = Joi.object({
   currency: Joi.string().optional().allow(''),
@@ -30,21 +41,23 @@ module.exports = async (req, res) => {
     } = body
 
     const today = new Date().getDay()
-    if (today === day) {
-      logger.info('graph and cycle already exists in cache, returning caches values')
+    // if (today === day) {
+    //   logger.info('graph and cycle already exists in cache, returning caches values')
 
-      return res.json({
-        success: true,
-        data: {
-          cycles: findOptimalRoutes(sub, currency, filterByCurrency),
-        },
-      })
-    }
+    //   return res.json({
+    //     success: true,
+    //     data: {
+    //       cycles: findOptimalRoutes(sub, currency, filterByCurrency),
+    //     },
+    //   })
+    // }
 
     logger.info('renewing graph and cycles')
 
     graph = await generateGraph(logger)
+    // console.log('graph', graph)
     cycles = Object.keys(graph).map((coin) => findCycles(graph, coin))
+    console.log('cycles', cycles)
     sub = cycles.map(({ path }) => subCycles(graph, path)).reduce((prev, curr) => [...prev, ...curr], [])
     day = today
 

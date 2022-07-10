@@ -1,4 +1,5 @@
 module.exports = (graph, cycle) => {
+  // console.log('cyclecyclecycle', cycle)
   // initializing profit to 1
   let profit = 1
 

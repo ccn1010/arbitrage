@@ -28,7 +28,7 @@ export default () => (next) => async (action) => {
       ...requestConfig,
       method,
       timeout: 300000,
-      baseURL: '/api/v1',
+      baseURL: 'http://localhost:8000/api/v1',
     })
 
     if (!success) throw Error(`got success false with api to: ${requestConfig.url}`)
