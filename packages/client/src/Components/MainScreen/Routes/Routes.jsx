@@ -135,6 +135,11 @@ function Routes(props) {
                       </span>
                     </div>
                   )}
+                  <div className={classes.tagsContainer}>
+                    <span>
+                      TRADE
+                    </span>
+                  </div>
                 </div>
                 <div className={classes.profitPerStep}>
                   {`Average profit per step: ${parseFloat(((profit < 0.1 ? profit * 10000 : profit) / path.length)

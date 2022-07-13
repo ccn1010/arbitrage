@@ -5,13 +5,14 @@ const refactorResponse = ({ rates, base }) => {
   const ret = Object
     .entries(rates)
     // XXX 应该加这个filter吗
-    .filter(([currency])=>CURRENCIES.includes(currency.toUpperCase()))
+    // .filter(([currency])=>CURRENCIES.includes(currency.toUpperCase()))
     .map(([currency, weight]) => ({
       to: currency,
       from: base,
       weight,
     }))
 
+  // console.log('rrrr', ret)
   return ret;
 }
 

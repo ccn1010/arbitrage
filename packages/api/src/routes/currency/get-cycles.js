@@ -2,7 +2,9 @@ const Joi = require('@hapi/joi')
 
 const findCycles = require('../../lib/cycles/find-cycles')
 const subCycles = require('../../lib/cycles/sub-cycles')
-const generateGraph = require('../../lib/graph/generate-graph')
+// const generateGraph = require('../../lib/graph/generate-graph')
+const generateGraph = require('../../lib/graph/generate-graph-binance')
+// const generateGraph = require('../../lib/graph/generate-graph-eth')
 
 const findOptimalRoutes = (cycles, currency, filterByCurrency) => {
   const dp = {}
