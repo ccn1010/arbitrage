@@ -16,7 +16,7 @@ module.exports = async ({
     })
     return res
   } catch (e) {
-    logger.error(e)
+    logger && logger.error(e)
     return e
   }
 }

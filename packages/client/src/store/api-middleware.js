@@ -4,6 +4,7 @@ import store from './store'
 import { appTypes } from './actions/types'
 
 export default () => (next) => async (action) => {
+  console.log('action', action)
   if (!action.api) return next(action)
 
   const {

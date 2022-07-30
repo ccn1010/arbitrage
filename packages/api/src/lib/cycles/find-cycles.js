@@ -30,14 +30,18 @@ module.exports = (graph, start) => {
   while (edges.length) {
     const edge = edges.pop()
     const {
-      to, from, weight, bank,
+      to, from, weight, isReverse, symbol,
     } = edge
+
+    // console.log('edge', edge)
 
     if (dist[to] < (dist[from] * weight)) {
       dist[to] = (dist[from] * weight)
       pre[to].push({
         parent: from,
         to,
+        symbol,
+        isReverse,
       })
     }
     edges.unshift(...(nodes[to] || []))
@@ -58,9 +62,18 @@ module.exports = (graph, start) => {
 
   // reconstacting path
   const path = [parent]
+  // console.log('==================', path, pre)
+  // TODO 这里加个逻辑，就是 busd usdt 这种可以互换 parent.parent !== start || parent.parent !== like start
   while (parent.parent !== start) {
     parent = pre[parent.parent].pop()
+    // console.log('parent', parent)
     path.unshift(parent)
+    if(!parent){
+      return {
+        path: [],
+        profit: 0,
+      }
+    }
   }
 
   return {

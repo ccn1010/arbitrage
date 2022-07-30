@@ -9,6 +9,7 @@ import {
 
 import { connect } from 'react-redux'
 import { setSelectedCycle } from '../../../store/actions/selectedCycle'
+import { trade } from '../../../store/actions/app'
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
   title: {
@@ -103,7 +104,7 @@ function Routes(props) {
             Possible routes
           </div>
           <List aria-label="routes list">
-            {cycles.slice(0, 5).map(({ path, profit }, i) => (
+            {cycles.slice(0, 10).filter(({path})=>(path.length < 10)).map(({ path, profit }, i) => (
               <ListItem
                 key={profit / path.length}
                 button
@@ -136,7 +137,7 @@ function Routes(props) {
                     </div>
                   )}
                   <div className={classes.tagsContainer}>
-                    <span>
+                    <span onClick={(e)=>dispatch(trade(e, path))}>
                       TRADE
                     </span>
                   </div>

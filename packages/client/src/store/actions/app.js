@@ -38,8 +38,28 @@ const getCycles = (currency, filterByCurrency) => ({
   },
 })
 
+const trade = (e, path) => {
+  e.stopPropagation();
+  console.log(1111111)
+
+  return {
+    type: API,
+    api: {
+      method: 'POST',
+      url: '/currency/trade',
+      data: {
+        path,
+      },
+      onSuccess: (data)=>{
+        console.log('ssssucess', data)
+      },
+    },
+  };
+}
+
 export {
   toggleLoading,
   getGraph,
   getCycles,
+  trade,
 }

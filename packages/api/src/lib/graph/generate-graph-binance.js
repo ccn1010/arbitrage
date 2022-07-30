@@ -121,9 +121,9 @@ module.exports = async (logger) => {
   symbolResp.data.symbols.filter(item=>{
     return item.status === 'TRADING';
   }).forEach(item=>{
-    if(symbols.length >= 50){
-      return;
-    }
+    // if(symbols.length >= 600){
+    //   return;
+    // }
     symbols.push({
       // 这里故意反过来了
       from: item.baseAsset,
@@ -154,12 +154,14 @@ module.exports = async (logger) => {
         from: item.from,
         to: item.to,
         weight: values[index].price,
+        symbol: item.symbol,
       });
       finalSymbols.push({
         to: item.from,
         from: item.to,
         weight: 1/values[index].price,
         isReverse: true,
+        symbol: item.symbol,
       });
     });
   }

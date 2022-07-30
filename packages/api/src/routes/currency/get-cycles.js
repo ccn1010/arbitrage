@@ -3,7 +3,11 @@ const Joi = require('@hapi/joi')
 const findCycles = require('../../lib/cycles/find-cycles')
 const subCycles = require('../../lib/cycles/sub-cycles')
 // const generateGraph = require('../../lib/graph/generate-graph')
-const generateGraph = require('../../lib/graph/generate-graph-binance')
+// const generateGraph = require('../../lib/graph/generate-graph-binance')
+// const generateGraph = require('../../lib/graph/generate-graph-blockchain')
+// const generateGraph = require('../../lib/graph/generate-graph-bitfinex')
+// const generateGraph = require('../../lib/graph/generate-graph-kraken')
+const generateGraph = require('../../lib/graph/dex/generate-graph-uniswap')
 // const generateGraph = require('../../lib/graph/generate-graph-eth')
 
 const findOptimalRoutes = (cycles, currency, filterByCurrency) => {
@@ -58,8 +62,11 @@ module.exports = async (req, res) => {
 
     graph = await generateGraph(logger)
     // console.log('graph', graph)
-    cycles = Object.keys(graph).map((coin) => findCycles(graph, coin))
-    console.log('cycles', cycles)
+    cycles = Object.keys(graph).filter((item)=>{
+      console.log('item', item)
+      return item.includes('US') || item.includes('BTC') || item.includes('ETH') || item.includes('BNB')
+    }).map((coin) => findCycles(graph, coin))
+    // console.log('cycles', cycles)
     sub = cycles.map(({ path }) => subCycles(graph, path)).reduce((prev, curr) => [...prev, ...curr], [])
     day = today
 
