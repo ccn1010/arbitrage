@@ -35,8 +35,9 @@ module.exports = (graph, start) => {
 
     // console.log('edge', edge)
 
-    if (dist[to] < (dist[from] * weight)) {
-      dist[to] = (dist[from] * weight)
+    const dw = weight.multipliedBy(dist[from]);
+    if (dist[to] < dw) {
+      dist[to] = dw
       pre[to].push({
         parent: from,
         to,

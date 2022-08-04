@@ -1,5 +1,7 @@
+const BigNumber = require('bignumber.js');
 const { CURRENCIES } = require('../../consts')
 const request = require('../../lib/request')
+const getDexPrice = require('../../lib/graph/dex/get-price');
 
 const getPrice = async (symbol) => {
     const data = await request({
@@ -57,19 +59,29 @@ const getPriceKraken = async (symbol) => {
     }, 1-0.0007];
 }
 
+const getPriceUniswap = async (symbol) => {
+    const data = await getDexPrice(symbol);
+    const price = BigNumber(data._reserve0).dividedBy(data._reserve1).toString();
+
+    return [{
+        bidPrice: price,
+        askPrice: price,
+    }, 1-0.0005];
+}
+
 module.exports = async (req, res) => {
-    let balance = 100;
+    let balance = BigNumber(100);
     const { path } = req.body;
     for(let p of path) {
-        const [data, fee] = await getPriceKraken(p.symbol);
-        let price = data.bidPrice;
+        const [data, fee] = await getPriceUniswap(p.symbol);
+        let price = BigNumber(data.bidPrice);
         if(p.isReverse){
-            price = 1 / data.askPrice;
+            price = BigNumber(1).dividedBy(data.askPrice);
         }
-        balance = balance * price * fee;
+        balance = balance.multipliedBy(price).multipliedBy(fee);
         console.log('ppppppp', data, p.symbol, p.isReverse)
     }
-  console.log('balancebalancebalance', balance)
+  console.log('balancebalancebalance', balance.toString())
 //   getPrice()
 return {};
 }

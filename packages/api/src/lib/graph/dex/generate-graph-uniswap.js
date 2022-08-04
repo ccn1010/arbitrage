@@ -1,12 +1,18 @@
-const request = require('../../request')
+const BigNumber = require('bignumber.js');
 const getPairs = require('./scan-pairs')
 
 module.exports = async (logger) => {
   logger.info('attempting to create graph')
   const finalSymbols = [];
   const pairs = await getPairs();
+  // const one = BigNumber(1);
+  const zero = BigNumber(0);
+
   pairs.forEach(item=>{
-    console.log('itemitemitem', item)
+    // console.log('itemitemitem', item)
+    if(item.weight.isEqualTo(zero)){
+      return;
+    }
     finalSymbols.push({
       from: item.from,
       to: item.to,
@@ -16,13 +22,15 @@ module.exports = async (logger) => {
     finalSymbols.push({
       to: item.from,
       from: item.to,
-      weight: 1/item.weight,
+      weight: BigNumber(1).dividedBy(item.weight),
       isReverse: true,
       symbol: item.symbol,
     });
+
+    console.log('wwwwww', item.weight.toString(), BigNumber(1).dividedBy(item.weight).toString())
   });
 
-  console.log('vvvvv', finalSymbols)
+  // console.log('vvvvv', finalSymbols)
 
   const nodeMap = {};
   finalSymbols.forEach(symbol=>{

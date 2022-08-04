@@ -62,10 +62,13 @@ module.exports = async (req, res) => {
 
     graph = await generateGraph(logger)
     // console.log('graph', graph)
-    cycles = Object.keys(graph).filter((item)=>{
+    cycles = Object.keys(graph)
+    .filter((item)=>{
       console.log('item', item)
-      return item.includes('US') || item.includes('BTC') || item.includes('ETH') || item.includes('BNB')
-    }).map((coin) => findCycles(graph, coin))
+      // return item.includes('US') || item.includes('BTC') || item.includes('ETH') || item.includes('BNB')
+      return item.toUpperCase().includes('USD') || item.toUpperCase().includes('DAI')
+    })
+    .map((coin) => findCycles(graph, coin))
     // console.log('cycles', cycles)
     sub = cycles.map(({ path }) => subCycles(graph, path)).reduce((prev, curr) => [...prev, ...curr], [])
     day = today

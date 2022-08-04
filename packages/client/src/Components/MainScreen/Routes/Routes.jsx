@@ -1,4 +1,5 @@
 import React from 'react'
+import { BigNumber } from "bignumber.js";
 import { SemipolarLoading } from 'react-loadingg'
 import { get } from 'lodash'
 import {
@@ -104,9 +105,10 @@ function Routes(props) {
             Possible routes
           </div>
           <List aria-label="routes list">
-            {cycles.slice(0, 10).filter(({path})=>(path.length < 10)).map(({ path, profit }, i) => (
-              <ListItem
-                key={profit / path.length}
+            {cycles.slice(0, 10).filter(({path})=>(path.length < 10)).map(({ path, profit: profitStr }, i) => {
+              const profit = BigNumber(profitStr).toFixed(5).toString();
+              return <ListItem
+                key={i}
                 button
                 onClick={() => dispatch(setSelectedCycle(i))}
                 className={classes.listItem}
@@ -127,7 +129,8 @@ function Routes(props) {
                   <div
                     className={classes.listText}
                   >
-                    {`Profit: ${parseFloat((profit < 0.1 ? profit * 10000 : profit).toFixed(3))}%`}
+                    {/* {`Profit: ${parseFloat((profit < 0.1 ? profit * 10000 : profit).toFixed(3))}%`} */}
+                    {`Profit: ${profit}%`}
                   </div>
                   {(i === 0) && (
                     <div className={classes.tagsContainer}>
@@ -143,14 +146,15 @@ function Routes(props) {
                   </div>
                 </div>
                 <div className={classes.profitPerStep}>
-                  {`Average profit per step: ${parseFloat(((profit < 0.1 ? profit * 10000 : profit) / path.length)
-                    .toFixed(3))}`}
+                  {`Average profit per step: ${profit}`}
+                  {/* {`Average profit per step: ${parseFloat(((profit < 0.1 ? profit * 10000 : profit) / path.length)
+                    .toFixed(3))}`} */}
                 </div>
                 <div className={classes.routeLength}>
                   {`Route length: ${path.length}`}
                 </div>
               </ListItem>
-            ))}
+            })}
           </List>
         </>
       )}

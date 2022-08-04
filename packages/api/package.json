@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js | pino-pretty -i hostname,pid -t",
+    "dev": "nodemon --ignore ./data/ index.js | pino-pretty -i hostname,pid -t",
     "lint": "./node_modules/.bin/eslint . --ext .js",
     "lint-fix": "./node_modules/.bin/eslint --fix . --ext .js",
     "lint-fix-dry": "./node_modules/.bin/eslint --fix-dry-run . --ext .js"
@@ -25,6 +25,8 @@
     "eslint-plugin-import": "^2.22.0",
     "express": "^4.17.1",
     "express-list-endpoints": "^5.0.0",
+    "graphql": "^16.5.0",
+    "graphql-request": "^4.3.0",
     "helmet": "^4.1.1",
     "lodash": "^4.17.21",
     "log4js": "^6.3.0",

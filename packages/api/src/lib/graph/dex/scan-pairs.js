@@ -2,8 +2,9 @@ const Web3 = require('web3');
 const util = require('util');
 const env = require('dotenv').config();
 const path = require('path');
+const BigNumber = require('bignumber.js');
 
-const pairCounts = require('./data/factories/pair-counts.js');
+const pairCounts = require('../../../../data/factories/pair-counts.js');
 const pairAbi = require('./constants/abi/pair-abi.js');
 
 let data;
@@ -44,6 +45,7 @@ const getReserves = async (from, to) => {
     await new Promise(function(resolve, reject){
       for(let i = from; i < to; i++){
         const pair = data[i];
+        console.log('ppppp', pair)
         const address = pair.id;
         const index = i - from;
         const contract = new web3.eth.Contract(pairAbi, address);
@@ -54,9 +56,9 @@ const getReserves = async (from, to) => {
           // console.log('dddddddddd', index, data)
           counter++;
           result[index] = {
-            from: pair.token0.name,
-            to: pair.token1.name,
-            weight: data._reserve0 / data._reserve1,
+            from: pair.token0.symbol,
+            to: pair.token1.symbol,
+            weight: BigNumber(data._reserve0).dividedBy(data._reserve1),
             symbol: pair.id,
           };
 
@@ -78,17 +80,17 @@ module.exports = async () => {
   for (let i = 0; i < pairCounts.length; i++) {
     if (mode === pairCounts[i].name) {
       const network = pairCounts[i].network;
-      const pairPath = path.resolve(__dirname, 
+      const pairPath = path.resolve(
         './data/pairs/',
         `${network}`,
-        `${mode}.js`
+        `${mode}.json`
       );
-      data = require(pairPath);
+      data = require(pairPath).pairs;
       message = `checking ${data.length} ${mode}swap pairs...`;
+      console.log(message)
       setRPC(network);
 
-      // max = data.length;
-      max = 400;
+      max = data.length;
       break;
     }
   }

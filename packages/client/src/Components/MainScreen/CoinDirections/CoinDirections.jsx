@@ -55,7 +55,7 @@ function CoinDirections(props) {
   const classes = useStyles()
   const { graph, dispatch } = props
   const [searchVal, setSearchVal] = useState('')
-  const [filterByCurrency, setFilterByCurrency] = useState(true)
+  const [filterByCurrency, setFilterByCurrency] = useState(false)
 
   const searchRoutes = () => {
     dispatch(toggleLoading())
