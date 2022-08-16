@@ -14,10 +14,14 @@ const getPairs = async (pairPath) => {
       token0 {
         id
         symbol
+        name
+        decimals
       }
       token1 {
         id
         symbol
+        name
+        decimals
       }
       reserveUSD
       volumeUSD
@@ -40,7 +44,5 @@ module.exports = async () => {
       `${factoryPair.name}.json`
     );
 
-    console.log(pairPath);
-
-    getPairs(pairPath);
+    await getPairs(pairPath);
 }

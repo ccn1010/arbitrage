@@ -16,12 +16,16 @@ module.exports = async (logger) => {
     finalSymbols.push({
       from: item.from,
       to: item.to,
+      fromToken: item.fromToken,
+      toToken: item.toToken,
       weight: item.weight,
       symbol: item.symbol,
     });
     finalSymbols.push({
       to: item.from,
       from: item.to,
+      fromToken: item.toToken,
+      toToken: item.fromToken,
       weight: BigNumber(1).dividedBy(item.weight),
       isReverse: true,
       symbol: item.symbol,

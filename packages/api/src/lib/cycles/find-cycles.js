@@ -31,6 +31,7 @@ module.exports = (graph, start) => {
     const edge = edges.pop()
     const {
       to, from, weight, isReverse, symbol,
+      fromToken, toToken,
     } = edge
 
     // console.log('edge', edge)
@@ -40,7 +41,9 @@ module.exports = (graph, start) => {
       dist[to] = dw
       pre[to].push({
         parent: from,
+        parentToken: fromToken,
         to,
+        toToken: toToken,
         symbol,
         isReverse,
       })

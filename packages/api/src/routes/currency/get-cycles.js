@@ -28,8 +28,6 @@ const schema = Joi.object({
 })
 
 let graph = {}
-let day
-let cycles = []
 let sub = []
 
 module.exports = async (req, res) => {
@@ -46,37 +44,42 @@ module.exports = async (req, res) => {
       filterByCurrency,
     } = body
 
-    const today = new Date().getDay()
-    // if (today === day) {
-    //   logger.info('graph and cycle already exists in cache, returning caches values')
-
-    //   return res.json({
-    //     success: true,
-    //     data: {
-    //       cycles: findOptimalRoutes(sub, currency, filterByCurrency),
-    //     },
-    //   })
-    // }
-
     logger.info('renewing graph and cycles')
 
     graph = await generateGraph(logger)
     // console.log('graph', graph)
-    cycles = Object.keys(graph)
-    .filter((item)=>{
-      console.log('item', item)
-      // return item.includes('US') || item.includes('BTC') || item.includes('ETH') || item.includes('BNB')
-      return item.toUpperCase().includes('USD') || item.toUpperCase().includes('DAI')
-    })
+    const cycles = Object.keys(graph)
+    // .filter((item)=>{
+    //   console.log('item', item)
+    //   // return item.includes('US') || item.includes('BTC') || item.includes('ETH') || item.includes('BNB')
+    //   return item.toUpperCase().includes('USD') || item.toUpperCase().includes('DAI')
+    // })
     .map((coin) => findCycles(graph, coin))
     // console.log('cycles', cycles)
     sub = cycles.map(({ path }) => subCycles(graph, path)).reduce((prev, curr) => [...prev, ...curr], [])
-    day = today
+
+    let optimalRoutes = findOptimalRoutes(sub, currency, filterByCurrency);
+    // DEX 数据需要特殊处理
+    optimalRoutes = optimalRoutes.map(element => {
+      return {
+        ...element,
+        path: element.path.map(item=>{
+          return {
+            ...item,
+            parent: item.parentToken.name,
+            to: item.toToken.name,
+            // parent: item.parentToken.symbol,
+            // to: item.toToken.symbol,
+          };
+        }),
+      }
+    });
+    // console.log('optimalRoutes', JSON.stringify(optimalRoutes, null, 2))
 
     return res.json({
       success: true,
       data: {
-        cycles: findOptimalRoutes(sub, currency, filterByCurrency),
+        cycles: optimalRoutes,
       },
     })
   } catch (e) {

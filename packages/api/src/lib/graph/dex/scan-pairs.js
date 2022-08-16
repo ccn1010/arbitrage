@@ -56,8 +56,10 @@ const getReserves = async (from, to) => {
           // console.log('dddddddddd', index, data)
           counter++;
           result[index] = {
-            from: pair.token0.symbol,
-            to: pair.token1.symbol,
+            from: pair.token0.id,
+            to: pair.token1.id,
+            fromToken: pair.token0,
+            toToken: pair.token1,
             weight: BigNumber(data._reserve0).dividedBy(data._reserve1),
             symbol: pair.id,
           };
