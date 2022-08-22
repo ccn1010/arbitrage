@@ -1,8 +1,8 @@
-const path = require('path');
+const path = require('path')
 const jsonfile = require('jsonfile')
 const { request, gql } = require('graphql-request')
 
-const pairCounts = require('../../../../data/factories/pair-counts.js');
+const pairCounts = require('../../../../data/factories/pair-counts.js')
 
 const getPairs = async (pairPath) => {
   const endpoint = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
@@ -30,19 +30,19 @@ const getPairs = async (pairPath) => {
   `
 
   const data = await request(endpoint, query, {
-    volumeUSD: '1000000'
+    volumeUSD: '1000000',
   })
 
   jsonfile.writeFile(pairPath, data, { spaces: 2 })
 }
 
 module.exports = async () => {
-    const factoryPair = pairCounts.find((p) => p.name === 'uni');
-    const pairPath = path.resolve(
-      './data/pairs/',
-      `${factoryPair.network}`,
-      `${factoryPair.name}.json`
-    );
+  const factoryPair = pairCounts.find((p) => p.name === 'uni')
+  const pairPath = path.resolve(
+    './data/pairs/',
+    `${factoryPair.network}`,
+    `${factoryPair.name}.json`,
+  )
 
-    await getPairs(pairPath);
+  await getPairs(pairPath)
 }

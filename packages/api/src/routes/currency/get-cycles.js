@@ -7,7 +7,8 @@ const subCycles = require('../../lib/cycles/sub-cycles')
 // const generateGraph = require('../../lib/graph/generate-graph-blockchain')
 // const generateGraph = require('../../lib/graph/generate-graph-bitfinex')
 // const generateGraph = require('../../lib/graph/generate-graph-kraken')
-const generateGraph = require('../../lib/graph/dex/generate-graph-uniswap')
+// const generateGraph = require('../../lib/graph/dex/generate-graph-uniswap')
+const generateGraph = require('../../lib/graph/dex/generate-graph-uniswap-v3')
 // const generateGraph = require('../../lib/graph/generate-graph-eth')
 
 const findOptimalRoutes = (cycles, currency, filterByCurrency) => {
@@ -54,26 +55,22 @@ module.exports = async (req, res) => {
     //   // return item.includes('US') || item.includes('BTC') || item.includes('ETH') || item.includes('BNB')
     //   return item.toUpperCase().includes('USD') || item.toUpperCase().includes('DAI')
     // })
-    .map((coin) => findCycles(graph, coin))
+      .map((coin) => findCycles(graph, coin))
     // console.log('cycles', cycles)
     sub = cycles.map(({ path }) => subCycles(graph, path)).reduce((prev, curr) => [...prev, ...curr], [])
 
-    let optimalRoutes = findOptimalRoutes(sub, currency, filterByCurrency);
+    let optimalRoutes = findOptimalRoutes(sub, currency, filterByCurrency)
     // DEX 数据需要特殊处理
-    optimalRoutes = optimalRoutes.map(element => {
-      return {
-        ...element,
-        path: element.path.map(item=>{
-          return {
-            ...item,
-            parent: item.parentToken.name,
-            to: item.toToken.name,
-            // parent: item.parentToken.symbol,
-            // to: item.toToken.symbol,
-          };
-        }),
-      }
-    });
+    optimalRoutes = optimalRoutes.map((element) => ({
+      ...element,
+      path: element.path.map((item) => ({
+        ...item,
+        parent: item.parentToken.name,
+        to: item.toToken.name,
+        // parent: item.parentToken.symbol,
+        // to: item.toToken.symbol,
+      })),
+    }))
     // console.log('optimalRoutes', JSON.stringify(optimalRoutes, null, 2))
 
     return res.json({

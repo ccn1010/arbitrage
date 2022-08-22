@@ -36,14 +36,14 @@ module.exports = (graph, start) => {
 
     // console.log('edge', edge)
 
-    const dw = weight.multipliedBy(dist[from]);
+    const dw = weight.multipliedBy(dist[from])
     if (dist[to] < dw) {
       dist[to] = dw
       pre[to].push({
         parent: from,
         parentToken: fromToken,
         to,
-        toToken: toToken,
+        toToken,
         symbol,
         isReverse,
       })
@@ -72,7 +72,7 @@ module.exports = (graph, start) => {
     parent = pre[parent.parent].pop()
     // console.log('parent', parent)
     path.unshift(parent)
-    if(!parent){
+    if (!parent) {
       return {
         path: [],
         profit: 0,
