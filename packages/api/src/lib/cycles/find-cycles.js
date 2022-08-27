@@ -31,7 +31,7 @@ module.exports = (graph, start) => {
     const edge = edges.pop()
     const {
       to, from, weight, isReverse, symbol,
-      fromToken, toToken,
+      fromToken, toToken, fee,
     } = edge
 
     // console.log('edge', edge)
@@ -46,6 +46,7 @@ module.exports = (graph, start) => {
         toToken,
         symbol,
         isReverse,
+        fee,
       })
     }
     edges.unshift(...(nodes[to] || []))

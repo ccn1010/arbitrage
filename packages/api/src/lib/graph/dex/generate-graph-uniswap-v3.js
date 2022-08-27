@@ -24,9 +24,10 @@ module.exports = async (logger) => {
         ...item.token1,
         price: item.token1Price,
       },
-      weight: BigNumber(item.token0Price),
+      weight: BigNumber(item.token0Price).multipliedBy(1 - item.feeTier / 10000 / 100),
       symbol: item.id,
       liquidity: item.liquidity,
+      fee: item.feeTier,
     })
     finalPools.push({
       to: item.token0.id,
@@ -39,11 +40,11 @@ module.exports = async (logger) => {
         ...item.token0,
         price: item.token0Price,
       },
-      // weight: BigNumber(1).dividedBy(item.token0Price),
-      weight: BigNumber(item.token1Price),
+      weight: BigNumber(item.token1Price).multipliedBy(1 - item.feeTier / 10000 / 100),
       isReverse: true,
       symbol: item.id,
       liquidity: item.liquidity,
+      fee: item.feeTier,
     })
 
     // console.log('wwwwww', item.id, BigNumber(item.token0Price).toString(), BigNumber(item.token1Price).toString())
